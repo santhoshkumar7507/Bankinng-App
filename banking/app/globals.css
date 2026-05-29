@@ -82,7 +82,7 @@ body {
 
 @layer utilities {
   .input-class {
-    @apply text-16 placeholder:text-16 rounded-lg border border-gray-300 text-gray-900 placeholder:text-gray-500;
+    @apply text-16 placeholder:text-16 rounded-xl border border-white/10 bg-white/5 text-white placeholder:text-gray-600 backdrop-blur-sm transition-all duration-300 focus:border-blue-500/50 focus:bg-white/8 focus:shadow-[0_0_0_3px_rgba(1,121,254,0.15)];
   }
 
   .sheet-content button {
@@ -325,12 +325,12 @@ body {
 
   /* Auth */
   .auth-asset {
-    @apply flex h-screen w-full sticky top-0 items-center justify-end bg-sky-1 max-lg:hidden;
+    @apply hidden;
   }
 
   /* Auth Form */
   .auth-form {
-    @apply flex min-h-screen w-full max-w-[420px] flex-col justify-center gap-5 py-10 md:gap-8;
+    @apply flex min-h-screen w-full max-w-[460px] flex-col justify-center gap-6 py-10 md:gap-8 px-2;
   }
 
   .form-item {
@@ -338,7 +338,7 @@ body {
   }
 
   .form-label {
-    @apply text-14 w-full max-w-[280px] font-medium text-gray-700;
+    @apply text-14 w-full max-w-[280px] font-medium text-gray-400;
   }
 
   .form-message {
@@ -346,7 +346,7 @@ body {
   }
 
   .form-btn {
-    @apply text-16 rounded-lg border border-bankGradient bg-bank-gradient font-semibold text-white shadow-form;
+    @apply text-16 rounded-xl border-0 bg-bank-gradient font-semibold text-white shadow-glow-blue hover:shadow-[0_0_30px_rgba(1,121,254,0.5)] transition-all duration-300;
   }
 
   .form-link {
