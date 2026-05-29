@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
@@ -15,59 +15,69 @@ const DoughnutChart = ({ accounts }: DoughnutChartProps) => {
         label: "Balance",
         data: balances,
         backgroundColor: [
-          "rgba(1, 121, 254, 0.85)",
-          "rgba(108, 92, 231, 0.85)",
-          "rgba(46, 144, 250, 0.85)",
-          "rgba(0, 176, 155, 0.85)",
+          "rgba(1, 121, 254, 0.9)",
+          "rgba(108, 92, 231, 0.9)",
+          "rgba(0, 212, 255, 0.85)",
+          "rgba(0, 245, 160, 0.85)",
+          "rgba(255, 118, 74, 0.85)",
         ],
         borderColor: [
           "rgba(1, 121, 254, 1)",
           "rgba(108, 92, 231, 1)",
-          "rgba(46, 144, 250, 1)",
-          "rgba(0, 176, 155, 1)",
+          "rgba(0, 212, 255, 1)",
+          "rgba(0, 245, 160, 1)",
+          "rgba(255, 118, 74, 1)",
         ],
-        borderWidth: 1.5,
+        borderWidth: 2,
         hoverBackgroundColor: [
           "rgba(1, 121, 254, 1)",
           "rgba(108, 92, 231, 1)",
-          "rgba(46, 144, 250, 1)",
-          "rgba(0, 176, 155, 1)",
+          "rgba(0, 212, 255, 1)",
+          "rgba(0, 245, 160, 1)",
+          "rgba(255, 118, 74, 1)",
         ],
-        hoverBorderWidth: 2,
-        hoverOffset: 6,
+        hoverBorderWidth: 3,
+        hoverOffset: 8,
+        borderRadius: 4,
+        spacing: 2,
       },
     ],
     labels: accountNames,
   };
 
   return (
-    <Doughnut
-      data={data}
-      options={{
-        cutout: "72%",
-        animation: {
-          animateRotate: true,
-          animateScale: true,
-          duration: 1000,
-          easing: "easeInOutQuart",
-        },
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            backgroundColor: "rgba(8, 8, 16, 0.95)",
-            titleColor: "#fff",
-            bodyColor: "#94a3b8",
-            borderColor: "rgba(255,255,255,0.1)",
-            borderWidth: 1,
-            cornerRadius: 12,
-            padding: 12,
-            callbacks: {
-              label: (ctx) => ` $${ctx.parsed.toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
+    <div className="animate-chart">
+      <Doughnut
+        data={data}
+        options={{
+          cutout: "74%",
+          animation: {
+            animateRotate: true,
+            animateScale: true,
+            duration: 1200,
+            easing: "easeInOutQuart",
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: "rgba(5, 7, 18, 0.97)",
+              titleColor: "#fff",
+              bodyColor: "#94a3b8",
+              borderColor: "rgba(1,121,254,0.3)",
+              borderWidth: 1,
+              cornerRadius: 14,
+              padding: 14,
+              boxPadding: 6,
+              callbacks: {
+                label: (ctx) =>
+                  `  $${ctx.parsed.toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
+                title: (items) => ` ${items[0].label}`,
+              },
             },
           },
-        },
-      }}
-    />
+        }}
+      />
+    </div>
   );
 };
 

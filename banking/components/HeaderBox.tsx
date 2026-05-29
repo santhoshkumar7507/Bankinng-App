@@ -4,11 +4,23 @@ const HeaderBox = ({ type = "title", title, subtext, user }: HeaderBoxProps) => 
       <h1 className="header-box-title flex flex-wrap items-center gap-2">
         {title}
         {type === "greeting" && (
-          <span className="relative inline-flex items-center gap-2">
-            <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent animate-pulse-glow">
+          <span className="inline-flex items-center gap-2">
+            <span
+              className="font-black"
+              style={{
+                background: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #38bdf8 100%)',
+                backgroundSize: '200% auto',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                animation: 'gradient-shift 3s ease infinite',
+              }}
+            >
               &nbsp;{user}
             </span>
-            <span className="inline-block size-2 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.8)] animate-pulse" />
+            <span
+              className="inline-block size-2.5 rounded-full bg-emerald-400"
+              style={{ boxShadow: '0 0 10px rgba(52,211,153,0.9)', animation: 'pulse 2s ease-in-out infinite' }}
+            />
           </span>
         )}
       </h1>

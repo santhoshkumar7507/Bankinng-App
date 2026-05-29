@@ -9,6 +9,13 @@ import {
 import { transactionCategoryStyles } from "@/constants"
 import { cn, formatAmount, formatDateTime, getTransactionStatus, removeSpecialCharacters } from "@/lib/utils"
 
+const CHANNEL_ICONS: Record<string, string> = {
+  online: "🌐",
+  "in store": "🏪",
+  "in-store": "🏪",
+  other: "💳",
+};
+
 const CategoryBadge = ({ category }: CategoryBadgeProps) => {
   const {
     borderColor,
@@ -20,30 +27,47 @@ const CategoryBadge = ({ category }: CategoryBadgeProps) => {
   return (
     <div className={cn('category-badge', borderColor, chipBackgroundColor)}>
       <div className={cn('size-2 rounded-full', backgroundColor)} />
-      <p className={cn('text-[12px] font-medium', textColor)}>{category}</p>
+      <p className={cn('text-[11px] font-semibold tracking-wide', textColor)}>{category}</p>
     </div>
   )
 }
 
 const TransactionsTable = ({ transactions }: TransactionTableProps) => {
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/[0.06] shadow-card-glow backdrop-blur-md"
-      style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.02) 100%)' }}
+    <div
+      className="overflow-hidden rounded-2xl"
+      style={{
+        background: 'linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.02) 100%)',
+        border: '1px solid rgba(255,255,255,0.06)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06)',
+        backdropFilter: 'blur(20px)',
+      }}
     >
       <Table>
         <TableHeader>
-          <TableRow className="border-b border-white/[0.06] hover:bg-transparent"
-            style={{ background: 'rgba(255,255,255,0.03)' }}
+          <TableRow
+            className="border-b border-white/[0.05] hover:bg-transparent"
+            style={{ background: 'linear-gradient(90deg, rgba(1,121,254,0.04) 0%, rgba(108,92,231,0.04) 100%)' }}
           >
-            {["Transaction", "Amount", "Status", "Date", "Channel", "Category"].map((col, i) => (
+            {[
+              { label: "Transaction", icon: "⟆" },
+              { label: "Amount", icon: "$" },
+              { label: "Status", icon: "◉" },
+              { label: "Date", icon: "📅", hide: false },
+              { label: "Channel", icon: "⊡", hideOnMobile: true },
+              { label: "Category", icon: "⊕", hideOnMobile: true },
+            ].map(({ label, icon, hideOnMobile }) => (
               <TableHead
-                key={col}
+                key={label}
                 className={cn(
-                  "px-4 py-4 text-[11px] font-semibold uppercase tracking-widest text-gray-500",
-                  i >= 4 && "max-md:hidden"
+                  "px-4 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-600",
+                  hideOnMobile && "max-md:hidden"
                 )}
               >
-                {col}
+                <span className="flex items-center gap-1.5">
+                  <span className="text-gray-700">{icon}</span>
+                  {label}
+                </span>
               </TableHead>
             ))}
           </TableRow>
@@ -54,58 +78,86 @@ const TransactionsTable = ({ transactions }: TransactionTableProps) => {
             const status = getTransactionStatus(new Date(t.date));
             const amount = formatAmount(t.amount);
             const isDebit = t.type === 'debit';
-            const isCredit = t.type === 'credit';
             const isNegative = isDebit || amount[0] === '-';
+            const channelIcon = CHANNEL_ICONS[t.paymentChannel?.toLowerCase()] || '💳';
 
             return (
               <TableRow
                 key={t.id}
                 className={cn(
-                  "border-b border-white/[0.04] transition-all duration-300 cursor-default",
-                  "hover:border-white/10",
-                  isNegative
-                    ? "hover:bg-red-500/5"
-                    : "hover:bg-green-500/5"
+                  "border-b border-white/[0.04] cursor-default group",
+                  "transition-all duration-200",
                 )}
                 style={{
-                  animationDelay: `${idx * 40}ms`,
-                  animation: 'fade-in-up 0.4s ease-out forwards',
+                  animationDelay: `${idx * 50}ms`,
+                  animation: 'fade-in-up 0.5s ease-out forwards',
                   opacity: 0,
                 }}
               >
-                <TableCell className="max-w-[250px] pl-4 pr-10 py-4">
+                {/* Transaction name */}
+                <TableCell className="max-w-[250px] pl-4 pr-6 py-4">
                   <div className="flex items-center gap-3">
-                    {/* Transaction icon dot */}
-                    <div className={cn(
-                      "size-2 shrink-0 rounded-full",
-                      isNegative ? "bg-red-400 shadow-[0_0_6px_rgba(248,113,113,0.6)]" : "bg-green-400 shadow-[0_0_6px_rgba(74,222,128,0.6)]"
-                    )} />
-                    <h1 className="text-14 truncate font-semibold text-white">
+                    {/* Status dot with glow */}
+                    <div className="relative flex-shrink-0">
+                      <div className={cn(
+                        "size-2 rounded-full",
+                        isNegative
+                          ? "bg-red-400 shadow-[0_0_8px_rgba(248,113,113,0.8)]"
+                          : "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"
+                      )} />
+                      <div className={cn(
+                        "absolute inset-0 rounded-full animate-ping opacity-40",
+                        isNegative ? "bg-red-400" : "bg-emerald-400"
+                      )} />
+                    </div>
+                    <h1 className="text-14 truncate font-semibold text-white/90 group-hover:text-white transition-colors">
                       {removeSpecialCharacters(t.name)}
                     </h1>
                   </div>
                 </TableCell>
 
-                <TableCell className={cn(
-                  "pl-4 pr-10 py-4 font-bold text-16 tabular-nums",
-                  isNegative ? 'text-[#fc8181]' : 'text-[#68d391]'
-                )}>
-                  {isNegative ? `-${amount}` : amount}
+                {/* Amount */}
+                <TableCell className="pl-4 pr-6 py-4">
+                  <span
+                    className={cn(
+                      "font-bold text-15 tabular-nums tracking-tight inline-flex items-center gap-1 px-2.5 py-1 rounded-lg",
+                      isNegative
+                        ? "text-red-400 bg-red-500/8"
+                        : "text-emerald-400 bg-emerald-500/8"
+                    )}
+                    style={{
+                      border: isNegative
+                        ? '1px solid rgba(248,113,113,0.15)'
+                        : '1px solid rgba(52,211,153,0.15)',
+                    }}
+                  >
+                    <span className="text-13">{isNegative ? '−' : '+'}</span>
+                    {isNegative ? amount.replace('-', '') : amount}
+                  </span>
                 </TableCell>
 
-                <TableCell className="pl-4 pr-10 py-4">
+                {/* Status */}
+                <TableCell className="pl-4 pr-6 py-4">
                   <CategoryBadge category={status} />
                 </TableCell>
 
-                <TableCell className="min-w-32 pl-4 pr-10 py-4 text-gray-500 text-13">
-                  {formatDateTime(new Date(t.date)).dateTime}
+                {/* Date */}
+                <TableCell className="min-w-32 pl-4 pr-6 py-4">
+                  <span className="text-12 text-gray-500 font-medium tabular-nums">
+                    {formatDateTime(new Date(t.date)).dateTime}
+                  </span>
                 </TableCell>
 
-                <TableCell className="pl-4 pr-10 py-4 capitalize min-w-24 text-gray-500 text-13">
-                  {t.paymentChannel}
+                {/* Channel */}
+                <TableCell className="pl-4 pr-6 py-4 capitalize max-md:hidden">
+                  <span className="text-12 text-gray-500 flex items-center gap-1.5">
+                    <span>{channelIcon}</span>
+                    {t.paymentChannel}
+                  </span>
                 </TableCell>
 
-                <TableCell className="pl-4 pr-10 py-4 max-md:hidden">
+                {/* Category */}
+                <TableCell className="pl-4 pr-6 py-4 max-md:hidden">
                   <CategoryBadge category={t.category} />
                 </TableCell>
               </TableRow>
